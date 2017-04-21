@@ -9,7 +9,7 @@ ENV TERM xterm
 ENV SERVER_NAME "pz-server"
 # Admin DB Password (required for the first launch)
 ENV ADMIN_PASSWORD "pz-server-password"
-# Game UDP port to allow player to contact the server (by default : 10 player)
+# Game UDP port to allow player to contact the server (by default : 10 players)
 ENV PLAYER_PORTS 16262-16272
 
 # Switch to root to use apt-get
@@ -44,7 +44,7 @@ RUN mkdir -p /home/steam/Zomboid && \
 USER steam
 
 # Make server port available to host : (10 slots)
-EXPOSE 8766 16261/udp ${PLAYER_PORTS}/udp 27015
+EXPOSE 8766/udp 16261/udp ${PLAYER_PORTS} 27015
 
 # Persistant folder with server data : /server-data
 VOLUME ["/server-data", "/server-files"]
