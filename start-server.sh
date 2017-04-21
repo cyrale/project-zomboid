@@ -1,5 +1,7 @@
 #!/bin/bash
 
+/home/steam/update-linuxgsm.sh
+
 # Customize server
 sed -ri 's/^servicename="pz-server"$/servicename="${SERVER_NAME}"/' /home/steam/linuxgsm/ProjectZomboid/pzserver
 sed -ri 's/^adminpassword="CHANGE_ME"$/adminpassword="${ADMIN_PASSWORD}"/' /home/steam/linuxgsm/ProjectZomboid/pzserver

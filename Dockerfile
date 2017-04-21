@@ -10,7 +10,7 @@ ENV SERVER_NAME "pz-server"
 # Admin DB Password (required for the first launch)
 ENV ADMIN_PASSWORD "pz-server-password"
 # Game UDP port to allow player to contact the server (by default : 10 player)
-ENV UDP_PLAYER_PORTS 16262-16272
+ENV PLAYER_PORTS 16262-16272
 
 # Switch to root to use apt-get
 USER root
@@ -26,11 +26,17 @@ RUN apt-get update && \
     rm -rf /var/tmp/*
 
 # Select the script as entry point
-COPY ./entrypoint-project-zomboid.sh /home/steam/
+COPY ./start-server.sh /home/steam/
 RUN mkdir -p /home/steam/Zomboid && \
     chown steam:steam /home/steam/Zomboid && \
-    chmod u+x /home/steam/entrypoint-project-zomboid.sh && \
-    chown steam:steam /home/steam/entrypoint-project-zomboid.sh && \
+    ln -s /home/steam/Zomboid /server-data && \
+    chown steam:steam /server-data && \
+    mkdir -p /home/steam/linuxgsm/ProjectZomboid/serverfiles && \
+    chown steam:steam /home/steam/linuxgsm/ProjectZomboid/serverfiles && \
+    ln -s /home/steam/linuxgsm/ProjectZomboid/serverfiles /server-files && \
+    chown steam:steam /server-files && \
+    chmod u+x /home/steam/start-server.sh && \
+    chown steam:steam /home/steam/start-server.sh && \
     chmod u+x /home/steam/linuxgsm/ProjectZomboid/pzserver && \
     chown steam:steam /home/steam/linuxgsm/ProjectZomboid/pzserver
 
@@ -38,9 +44,9 @@ RUN mkdir -p /home/steam/Zomboid && \
 USER steam
 
 # Make server port available to host : (10 slots)
-EXPOSE 16261/udp ${UDP_PLAYER_PORTS}/udp
+EXPOSE 8766 16261/udp ${PLAYER_PORTS}/udp 27015
 
-# Persistant folder with server data : /home/steam/Zomboid
-VOLUME ["/home/steam/Zomboid"]
+# Persistant folder with server data : /server-data
+VOLUME ["/server-data", "/server-files"]
 
-ENTRYPOINT ["/home/steam/entrypoint-project-zomboid.sh"]
+ENTRYPOINT ["/home/steam/start-server.sh"]
