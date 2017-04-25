@@ -44,7 +44,7 @@ RUN mkdir -p /home/steam/Zomboid && \
 USER steam
 
 # Make server port available to host : (10 slots)
-EXPOSE 8766/udp 16261/udp ${PLAYER_PORTS} 27015
+EXPOSE 8766/udp 8767/udp 16261/udp ${PLAYER_PORTS} 27015
 
 # Persistant folder with server data : /server-data
 VOLUME ["/server-data", "/server-files"]
