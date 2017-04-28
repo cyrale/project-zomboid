@@ -5,10 +5,18 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV TERM xterm
 
 ## Environment variables
+# Steam ports
+ENV STEAM_PORT_1 8766
+ENV STEAM_PORT_2 8767
+# RCON
+ENV RCON_PORT 27015
+ENV RCON_PASSWORD "rcon-password"
 # Server Name
 ENV SERVER_NAME "pz-server"
 # Admin DB Password (required for the first launch)
 ENV ADMIN_PASSWORD "pz-server-password"
+# Server port
+ENV SERVER_PORT 16261
 # Game UDP port to allow player to contact the server (by default : 10 players)
 ENV PLAYER_PORTS 16262-16272
 
@@ -44,7 +52,7 @@ RUN mkdir -p /home/steam/Zomboid && \
 USER steam
 
 # Make server port available to host : (10 slots)
-EXPOSE 8766/udp 8767/udp 16261/udp ${PLAYER_PORTS} 27015
+EXPOSE ${STEAM_PORT_1}/udp ${STEAM_PORT_2}/udp ${SERVER_PORT}/udp ${PLAYER_PORTS} ${RCON_PORT}
 
 # Persistant folder with server data : /server-data
 VOLUME ["/server-data", "/server-files"]

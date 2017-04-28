@@ -4,14 +4,20 @@ Docker version of the Project Zomboid steam server.
 
 ## How to use this image
 ```bash
-docker run -d -e SERVER_NAME="pz-server" -e ADMIN_PASSWORD="pz-server-password" -v /My/path/to/My/Config/and/data:/server-data -p 8766:8766/udp -p 16261:16261/udp -p 16262-16272:16262-16272 -p 27015:27015 --name project-zomboid cyrale/project-zomboid
+docker run -d -e SERVER_NAME="pz-server" -e ADMIN_PASSWORD="pz-server-password" -v $(pwd)./server-data:/server-data -p 8766:8766/udp -p 8767:8767/udp -p 16261:16261/udp -p 16262-16272:16262-16272 -p 27015:27015 --name project-zomboid cyrale/project-zomboid
 ```
 
-Once you have run the docker for the first time, you can edit your config file in your mapped directory /server-data/Server/$SERVER_NAME.ini.
+- Once you have run the docker for the first time, you can edit your config file in your mapped directory /server-data/Server/$SERVER_NAME.ini.
+- `server-data` and `server-files` directories must belong to the user who runs docker command.
 
 ## Variables
+- __STEAM_PORT_1__ Steam port 1 (default: 8766)
+- __STEAM_PORT_2__ Steam port 2 (default: 8767)
+- __RCON_PORT__ RCON port (default: 27015)
+- __RCON_PASSWORD__ RCON password
 - __SERVER_NAME__ Name of your server (for db & ini file)
 - __ADMIN_PASSWORD__ Admin password on your server
+- __SERVER_PORT__ Game server port
 - __PLAYER_PORTS__ Game ports to allow player to contact the server (by default : 10 players)
 
 ## Volumes
@@ -19,7 +25,8 @@ Once you have run the docker for the first time, you can edit your config file i
 - __/server-files__ Application dir of the server. Contains the mods directory.
 
 ## Expose
-- __8766__ Steam (udp)
+- __8766__ Steam port 1 (udp)
+- __8767__ Steam port 2 (udp)
 - __27015__ RCON
 - __16261__ Game server (udp)
 - __16262-16XXX__ Clients slots
