@@ -4,7 +4,16 @@ Docker version of the Project Zomboid steam server.
 
 ## How to use this image
 ```bash
-docker run -d -e SERVER_NAME="pz-server" -e ADMIN_PASSWORD="pz-server-password" -v $(pwd)./server-data:/server-data -p 8766:8766/udp -p 8767:8767/udp -p 16261:16261/udp -p 16262-16272:16262-16272 -p 27015:27015 --name project-zomboid cyrale/project-zomboid
+docker run -d -e SERVER_NAME="pz-server" \
+              -e ADMIN_PASSWORD="pz-server-password" \
+              -v $(pwd)./server-data:/server-data \
+              -p 8766:8766/udp \
+              -p 8767:8767/udp \
+              -p 16261:16261/udp \
+              -p 16262-16272:16262-16272 \
+              -p 27015:27015 \
+              --name project-zomboid \
+              cyrale/project-zomboid
 ```
 
 - Once you have run the docker for the first time, you can edit your config file in your mapped directory /server-data/Server/$SERVER_NAME.ini.
