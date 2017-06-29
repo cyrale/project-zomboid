@@ -1,4 +1,4 @@
-FROM cyrale/linuxgsm
+FROM cyrale/linuxgsm:legacy
 
 # Stop apt-get asking to get Dialog frontend
 ENV DEBIAN_FRONTEND noninteractive
