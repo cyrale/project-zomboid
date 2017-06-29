@@ -27,12 +27,17 @@ USER root
 RUN dpkg --add-architecture i386 && \
     apt-get update && \
     apt-get install -y \
+        software-properties-common && \
+    add-apt-repository ppa:webupd8team/java && \
+    apt-get update && \
+    echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections && \
+    apt-get install -y \
         binutils \
         bsdmainutils \
         bzip2 \
         ca-certificates \
         curl \
-        default-jre \
+        oracle-java8-set-default \
         file \
         git \
         gzip \
