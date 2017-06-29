@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SERVER_SCRIPT="/home/steam/linuxgsm/ProjectZomboid/pzserver"
+SERVER_SCRIPT="/home/steam/ProjectZomboid/pzserver"
 SERVER_INI="/server-data/Server/${SERVER_NAME}.ini"
 
 # Check if both directory are writable
@@ -16,18 +16,18 @@ then
 	exit 1
 fi
 
-/home/steam/update-linuxgsm.sh
 
 # Customize server
-if [ -f $SERVER_SCRIPT ]
-then
-    sed -ri "s/^servicename=\"(.*)\"$/servicename=\"${SERVER_NAME}\"/" $SERVER_SCRIPT
-    sed -ri "s/^adminpassword=\"(.*)\"$/adminpassword=\"${ADMIN_PASSWORD}\"/" $SERVER_SCRIPT
-fi
+#if [ -f $SERVER_SCRIPT ]
+#then
+#    sed -ri "s/^servername=\"(.*)\"$/servername=\"${SERVER_NAME}\"/" $SERVER_SCRIPT
+#    sed -ri "s/^adminpassword=\"(.*)\"$/adminpassword=\"${ADMIN_PASSWORD}\"/" $SERVER_SCRIPT
+#fi
 
 # Update the game with the last version
 echo "Update the game to the last version after each start/restart"
-$SERVER_SCRIPT auto-install
+$SERVER_SCRIPT update-functions
+$SERVER_SCRIPT update
 
 # Customize current server
 if [ -f $SERVER_INI ]

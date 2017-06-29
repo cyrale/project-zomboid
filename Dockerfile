@@ -1,4 +1,4 @@
-FROM cyrale/linuxgsm:legacy
+FROM ubuntu:16.04
 
 # Stop apt-get asking to get Dialog frontend
 ENV DEBIAN_FRONTEND noninteractive
@@ -24,32 +24,67 @@ ENV PLAYER_PORTS 16262-16272
 USER root
 
 # Install dependencies
-RUN apt-get update && \
+RUN dpkg --add-architecture i386 && \
+    apt-get update && \
     apt-get install -y \
-        default-jre && \
+        binutils \
+        bsdmainutils \
+        bzip2 \
+        ca-certificates \
+        curl \
+        default-jre \
+        file \
+        git \
+        gzip \
+        lib32gcc1 \
+        lib32ncurses5 \
+        lib32z1 \
+        libc6 \
+        libstdc++6 \
+        libstdc++6:i386 \
+        mailutils \
+        postfix \
+        python \
+        tmux \
+        util-linux \
+        unzip \
+        wget && \
     apt-get -y autoremove && \
     apt-get -y clean && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /tmp/* && \
     rm -rf /var/tmp/*
 
-# Select the script as entry point
+# Add the steam user
+RUN adduser \
+    --disabled-login \
+    --disabled-password \
+    --shell /bin/bash \
+    steam && \
+    usermod -G tty steam
+
 COPY ./start-server.sh /home/steam/
-RUN mkdir -p /home/steam/Zomboid && \
-    chown steam:steam /home/steam/Zomboid && \
+
+RUN [ -d /home/steam/ProjectZomboid ] || mkdir -p /home/steam/ProjectZomboid && \
+    [ -d /home/steam/Zomboid ] || mkdir -p /home/steam/Zomboid && \
+    [ -d /home/steam/ProjectZomboid/serverfiles ] || mkdir -p /home/steam/ProjectZomboid/serverfiles && \
+    chown -R steam:steam /home/steam && \
     ln -s /home/steam/Zomboid /server-data && \
     chown steam:steam /server-data && \
-    mkdir -p /home/steam/linuxgsm/ProjectZomboid/serverfiles && \
-    chown steam:steam /home/steam/linuxgsm/ProjectZomboid/serverfiles && \
-    ln -s /home/steam/linuxgsm/ProjectZomboid/serverfiles /server-files && \
+    ln -s /home/steam/ProjectZomboid/serverfiles /server-files && \
     chown steam:steam /server-files && \
     chmod u+x /home/steam/start-server.sh && \
-    chown steam:steam /home/steam/start-server.sh && \
-    chmod u+x /home/steam/linuxgsm/ProjectZomboid/pzserver && \
-    chown steam:steam /home/steam/linuxgsm/ProjectZomboid/pzserver
+    chown steam:steam /home/steam/start-server.sh
 
 # Switch to the user steam
 USER steam
+
+RUN cd /home/steam/ProjectZomboid/ && \
+    wget -N --no-check-certificate https://gameservermanagers.com/dl/linuxgsm.sh && \
+    chmod u+x /home/steam/ProjectZomboid/linuxgsm.sh && \
+    bash linuxgsm.sh pzserver && \
+    chmod u+x /home/steam/ProjectZomboid/pzserver && \
+    /home/steam/ProjectZomboid/pzserver auto-install
 
 # Make server port available to host : (10 slots)
 EXPOSE ${STEAM_PORT_1}/udp ${STEAM_PORT_2}/udp ${SERVER_PORT}/udp ${PLAYER_PORTS} ${RCON_PORT}
@@ -57,4 +92,5 @@ EXPOSE ${STEAM_PORT_1}/udp ${STEAM_PORT_2}/udp ${SERVER_PORT}/udp ${PLAYER_PORTS
 # Persistant folder with server data : /server-data
 VOLUME ["/server-data", "/server-files"]
 
-ENTRYPOINT ["/home/steam/start-server.sh"]
+#ENTRYPOINT ["/home/steam/start-server.sh"]
+
