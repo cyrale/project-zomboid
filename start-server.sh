@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# TODO: copy script and ini files by giving them the server name
+# TODO: change ini file with password
+
 SERVER_SCRIPT="/home/steam/ProjectZomboid/pzserver"
 SERVER_INI="/server-data/Server/${SERVER_NAME}.ini"
 
