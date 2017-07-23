@@ -30,15 +30,16 @@ $ORIGINAL_SERVER_SCRIPT update
 cp "${ORIGINAL_SERVER_SCRIPT}" "${SERVER_SCRIPT}"
 if [ ! -f $SERVER_CFG ]
 then
-    cp "${ORIGINAL_SERVER_CFG}" "${SERVER_CFG}"
+    cp -f "${ORIGINAL_SERVER_CFG}" "${SERVER_CFG}"
+fi
 
+if [ -f $SERVER_CFG ]
+then
     if [ -z "$(grep "adminpassword" "${SERVER_CFG}")" ]
     then
-        echo "ADD PASSWORD"
         echo "" >> "${SERVER_CFG}"
         echo "adminpassword=\"${ADMIN_PASSWORD}\"" >> "${SERVER_CFG}"
     else
-        echo "CHANGE PASSWORD"
         sed -ri "s/^adminpassword=\"(.*)\"$/adminpassword=\"${ADMIN_PASSWORD}\"/" "${SERVER_CFG}"
     fi
 fi
@@ -46,13 +47,20 @@ fi
 # Customize current server
 if [ ! -f $SERVER_INI ]
 then
-    cp ${ORIGINAL_SERVER_INI} ${SERVER_INI}
+    cp -f ${ORIGINAL_SERVER_INI} ${SERVER_INI}
+fi
 
+if [ -f $SERVER_INI ]
+then
+    sed -ri "s/^Password=(.*)$/Password=${SERVER_PASSWORD}/" "${SERVER_INI}"
+    sed -ri "s/^PublicName=(.*)$/PublicName=${SERVER_PUBLIC_NAME}/" "${SERVER_INI}"
+    sed -ri "s/^PublicDescription=(.*)$/PublicDescription=${SERVER_PUBLIC_DESC}/" "${SERVER_INI}"
+
+    sed -ri "s/^DefaultPort=([0-9]+)$/DefaultPort=${SERVER_PORT}/" "${SERVER_INI}"
     sed -ri "s/^SteamPort1=([0-9]+)$/SteamPort1=${STEAM_PORT_1}/" "${SERVER_INI}"
     sed -ri "s/^SteamPort2=([0-9]+)$/SteamPort2=${STEAM_PORT_2}/" "${SERVER_INI}"
     sed -ri "s/^RCONPort=([0-9]+)$/RCONPort=${RCON_PORT}/" "${SERVER_INI}"
     sed -ri "s/^RCONPassword=(.*)$/RCONPassword=${RCON_PASSWORD}/" "${SERVER_INI}"
-    sed -ri "s/^DefaultPort=([0-9]+)$/DefaultPort=${SERVER_PORT}/" "${SERVER_INI}"
 fi
 
 # Start the server with a specific name and admin password

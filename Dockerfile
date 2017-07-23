@@ -11,8 +11,11 @@ ENV STEAM_PORT_2 8767
 # RCON
 ENV RCON_PORT 27015
 ENV RCON_PASSWORD "rcon-password"
-# Server Name
+# Server informations
 ENV SERVER_NAME "pz-server"
+ENV SERVER_PASSWORD ""
+ENV SERVER_PUBLIC_NAME "Project Zomboid Server"
+ENV SERVER_PUBLIC_DESC ""
 # Admin DB Password (required for the first launch)
 ENV ADMIN_PASSWORD "pz-server-password"
 # Server port
