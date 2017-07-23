@@ -25,6 +25,9 @@ docker run -d -e SERVER_NAME="pz-server" \
 - __RCON_PORT__ RCON port (default: 27015)
 - __RCON_PASSWORD__ RCON password
 - __SERVER_NAME__ Name of your server (for db & ini file)
+- __SERVER_PASSWORD__ Password of your server used to connect to it
+- __SERVER_PUBLIC_NAME__ Public name of your server
+- __SERVER_PUBLIC_DESC__ Public description of your server
 - __ADMIN_PASSWORD__ Admin password on your server
 - __SERVER_PORT__ Game server port
 - __PLAYER_PORTS__ Game ports to allow player to contact the server (by default : 10 players)
