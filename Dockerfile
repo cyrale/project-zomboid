@@ -92,5 +92,4 @@ EXPOSE ${STEAM_PORT_1}/udp ${STEAM_PORT_2}/udp ${SERVER_PORT}/udp ${PLAYER_PORTS
 # Persistant folder with server data : /server-data
 VOLUME ["/server-data", "/server-files"]
 
-#ENTRYPOINT ["/home/steam/start-server.sh"]
-
+ENTRYPOINT ["/home/steam/start-server.sh"]
