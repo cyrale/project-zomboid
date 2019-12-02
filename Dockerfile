@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
 # Stop apt-get asking to get Dialog frontend
 ENV DEBIAN_FRONTEND noninteractive
@@ -62,6 +62,7 @@ RUN dpkg --add-architecture i386 && \
 RUN adduser \
     --disabled-login \
     --disabled-password \
+    --gecos "" \
     --shell /bin/bash \
     steam && \
     usermod -G tty steam
