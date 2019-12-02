@@ -29,7 +29,8 @@ USER root
 # Install dependencies
 RUN dpkg --add-architecture i386 && \
     apt-get update && \
-    apt-get install -y \
+    apt-get install --no-install-recommends -y \
+        bc \
         binutils \
         bsdmainutils \
         bzip2 \
@@ -39,6 +40,8 @@ RUN dpkg --add-architecture i386 && \
         file \
         git \
         gzip \
+        iproute2 \
+        jq \
         lib32gcc1 \
         lib32ncurses5 \
         lib32z1 \
@@ -47,7 +50,7 @@ RUN dpkg --add-architecture i386 && \
         libstdc++6:i386 \
         mailutils \
         postfix \
-        python \
+        python3 \
         tmux \
         util-linux \
         unzip \
