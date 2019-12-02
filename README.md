@@ -6,7 +6,7 @@ Docker version of the Project Zomboid steam server.
 ```bash
 docker run -d -e SERVER_NAME="pz-server" \
               -e ADMIN_PASSWORD="pz-server-password" \
-              -v $(pwd)./server-data:/server-data \
+              -v $(pwd)/server-data:/server-data \
               -p 8766:8766/udp \
               -p 8767:8767/udp \
               -p 16261:16261/udp \
