@@ -87,7 +87,7 @@ RUN [ -d /home/steam/ProjectZomboid ] || mkdir -p /home/steam/ProjectZomboid && 
 USER steam
 
 RUN cd /home/steam/ProjectZomboid/ && \
-    wget -N --quiet --no-check-certificate https://gameservermanagers.com/dl/linuxgsm.sh && \
+    wget -N --quiet --no-check-certificate https://raw.githubusercontent.com/GameServerManagers/LinuxGSM/master/linuxgsm.sh && \
     chmod u+x /home/steam/ProjectZomboid/linuxgsm.sh && \
     bash linuxgsm.sh pzserver && \
     chmod u+x /home/steam/ProjectZomboid/pzserver && \
