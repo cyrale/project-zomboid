@@ -67,4 +67,9 @@ fi
 echo "Start the project-zomboid server named ${SERVER_NAME}"
 $SERVER_SCRIPT start
 
+if [ ! -f /server-data/server-console.txt ]
+then
+  touch /server-data/server-console.txt
+fi
+
 tail -f /server-data/server-console.txt
