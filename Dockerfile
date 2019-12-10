@@ -48,6 +48,7 @@ RUN dpkg --add-architecture i386 && \
         libc6 \
         libstdc++6 \
         libstdc++6:i386 \
+        locales \
         mailutils \
         postfix \
         python3 \
@@ -60,6 +61,10 @@ RUN dpkg --add-architecture i386 && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /tmp/* && \
     rm -rf /var/tmp/*
+
+# Set the locale
+RUN localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
+ENV LANG en_US.utf8
 
 # Add the steam user
 RUN adduser \
