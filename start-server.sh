@@ -32,7 +32,10 @@ fi
 
 # Update the server with the last version
 echo "Update the server to the last version after each start/restart..."
-$ORIGINAL_SERVER_SCRIPT update-lgsm
+if [ "${UPDATE_LGSM_AT_RESTART}" == "true" ]
+then
+    $ORIGINAL_SERVER_SCRIPT update-lgsm
+fi
 $ORIGINAL_SERVER_SCRIPT update
 
 # Copy original config files

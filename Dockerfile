@@ -1,6 +1,7 @@
 FROM cyrale/linuxgsm
 
 ## Environment variables
+ENV UPDATE_LGSM_AT_RESTART "true"
 # Steam ports
 ENV STEAM_PORT_1 8766
 ENV STEAM_PORT_2 8767
