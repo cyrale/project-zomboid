@@ -1,7 +1,8 @@
 #!/bin/bash
 
-ORIGINAL_SERVER_SCRIPT="/home/linuxgsm/pzserver"
-ORIGINAL_SERVER_CFG="/home/linuxgsm/lgsm/config-lgsm/pzserver/pzserver.cfg"
+ORIGINAL_SERVER_NAME="pzserver"
+ORIGINAL_SERVER_SCRIPT="/home/linuxgsm/${ORIGINAL_SERVER_NAME}"
+ORIGINAL_SERVER_CFG="/home/linuxgsm/lgsm/config-lgsm/pzserver/${ORIGINAL_SERVER_NAME}.cfg"
 ORIGINAL_SERVER_INI="/home/linuxgsm/lgsm/config-default/config-game/server.ini"
 
 SERVER_SCRIPT="/home/linuxgsm/${SERVER_NAME}"
@@ -34,13 +35,18 @@ echo "Update the server to the last version after each start/restart..."
 $ORIGINAL_SERVER_SCRIPT update-lgsm
 $ORIGINAL_SERVER_SCRIPT update
 
-# Customize server
-cp "${ORIGINAL_SERVER_SCRIPT}" "${SERVER_SCRIPT}"
-if [ ! -f $SERVER_CFG ]
-then
-    cp -f "${ORIGINAL_SERVER_CFG}" "${SERVER_CFG}"
+# Copy original config files
+if [ "${ORIGINAL_SERVER_SCRIPT}" != "${SERVER_SCRIPT}" ]
+then 
+    cp "${ORIGINAL_SERVER_SCRIPT}" "${SERVER_SCRIPT}"
+
+    if [ ! -f $SERVER_CFG ]
+    then
+        cp -f "${ORIGINAL_SERVER_CFG}" "${SERVER_CFG}"
+    fi
 fi
 
+# Set admin password
 if [ -f $SERVER_CFG ]
 then
     if [ -z "$(grep "adminpassword" "${SERVER_CFG}")" ]
