@@ -1,11 +1,11 @@
 #!/bin/bash
 
-ORIGINAL_SERVER_SCRIPT="/home/steam/ProjectZomboid/pzserver"
-ORIGINAL_SERVER_CFG="/home/steam/ProjectZomboid/lgsm/config-lgsm/pzserver/pzserver.cfg"
-ORIGINAL_SERVER_INI="/home/steam/ProjectZomboid/lgsm/config-default/config-game/server.ini"
+ORIGINAL_SERVER_SCRIPT="/home/linuxgsm/pzserver"
+ORIGINAL_SERVER_CFG="/home/linuxgsm/lgsm/config-lgsm/pzserver/pzserver.cfg"
+ORIGINAL_SERVER_INI="/home/linuxgsm/lgsm/config-default/config-game/server.ini"
 
-SERVER_SCRIPT="/home/steam/ProjectZomboid/${SERVER_NAME}"
-SERVER_CFG="/home/steam/ProjectZomboid/lgsm/config-lgsm/pzserver/${SERVER_NAME}.cfg"
+SERVER_SCRIPT="/home/linuxgsm/${SERVER_NAME}"
+SERVER_CFG="/home/linuxgsm/lgsm/config-lgsm/pzserver/${SERVER_NAME}.cfg"
 SERVER_INI="/server-data/Server/${SERVER_NAME}.ini"
 
 # Check if both directory are writable
@@ -21,8 +21,16 @@ then
 	exit 1
 fi
 
-# Update the game with the last version
-echo "Update the game to the last version after each start/restart"
+# Install the server
+if [ ! -f /home/linuxgsm/.server-installed ]
+then
+    echo "Install the server..."
+    $ORIGINAL_SERVER_SCRIPT auto-install
+    touch /home/linuxgsm/.server-installed
+fi
+
+# Update the server with the last version
+echo "Update the server to the last version after each start/restart..."
 $ORIGINAL_SERVER_SCRIPT update-lgsm
 $ORIGINAL_SERVER_SCRIPT update
 
@@ -67,9 +75,11 @@ fi
 echo "Start the project-zomboid server named ${SERVER_NAME}"
 $SERVER_SCRIPT start
 
-if [ ! -f /server-data/server-console.txt ]
-then
-  touch /server-data/server-console.txt
-fi
+# Wait for file creation
+while [ ! -f /server-data/server-console.txt ]
+do
+    sleep 1
+done
 
+# Display logs
 tail -f /server-data/server-console.txt

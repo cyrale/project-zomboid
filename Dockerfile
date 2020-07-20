@@ -1,8 +1,4 @@
-FROM ubuntu:18.04
-
-# Stop apt-get asking to get Dialog frontend
-ENV DEBIAN_FRONTEND noninteractive
-ENV TERM xterm
+FROM cyrale/linuxgsm
 
 ## Environment variables
 # Steam ports
@@ -26,77 +22,37 @@ ENV PLAYER_PORTS 16262-16272
 # Switch to root to use apt-get
 USER root
 
+WORKDIR /
+
 # Install dependencies
-RUN dpkg --add-architecture i386 && \
-    apt-get update && \
+RUN apt-get update && \
     apt-get install --no-install-recommends -y \
-        bc \
-        binutils \
-        bsdmainutils \
-        bzip2 \
-        ca-certificates \
-        curl \
-        default-jre \
-        file \
-        git \
-        gzip \
-        iproute2 \
-        jq \
-        lib32gcc1 \
-        lib32ncurses5 \
-        lib32z1 \
-        libc6 \
-        libstdc++6 \
-        libstdc++6:i386 \
-        locales \
-        mailutils \
-        postfix \
-        python3 \
-        tmux \
-        util-linux \
-        unzip \
-        wget && \
+        rng-tools && \
     apt-get -y autoremove && \
     apt-get -y clean && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /tmp/* && \
     rm -rf /var/tmp/*
 
-# Set the locale
-RUN localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
-ENV LANG en_US.utf8
+# Copy entrypoint
+COPY start-server.sh /home/linuxgsm/start-server.sh
+RUN chown linuxgsm:linuxgsm /home/linuxgsm/start-server.sh && \
+    chmod +x /home/linuxgsm/start-server.sh   
 
-# Add the steam user
-RUN adduser \
-    --disabled-login \
-    --disabled-password \
-    --gecos "" \
-    --shell /bin/bash \
-    steam && \
-    usermod -G tty steam
-
-COPY ./start-server.sh /home/steam/
-
-RUN [ -d /home/steam/ProjectZomboid ] || mkdir -p /home/steam/ProjectZomboid && \
-    [ -d /home/steam/Zomboid ] || mkdir -p /home/steam/Zomboid && \
-    [ -d /home/steam/ProjectZomboid/serverfiles ] || mkdir -p /home/steam/ProjectZomboid/serverfiles && \
-    chown -R steam:steam /home/steam && \
-    ln -s /home/steam/Zomboid /server-data && \
-    chown steam:steam /server-data && \
-    ln -s /home/steam/ProjectZomboid/serverfiles /server-files && \
-    chown steam:steam /server-files && \
-    chmod u+x /home/steam/start-server.sh && \
-    chown steam:steam /home/steam/start-server.sh
+# Create server directories and link to access them
+RUN [ -d /home/linuxgsm/Zomboid ] || mkdir -p /home/linuxgsm/Zomboid && \
+    chown linuxgsm:linuxgsm /home/linuxgsm/Zomboid && \
+    ln -s /home/linuxgsm/Zomboid /server-data && \
+    [ -d /home/linuxgsm/serverfiles ] || mkdir -p /home/linuxgsm/serverfiles && \
+    chown linuxgsm:linuxgsm /home/linuxgsm/serverfiles && \
+    ln -s /home/linuxgsm/serverfiles /server-files
 
 # Switch to the user steam
-USER steam
+USER linuxgsm
 
-RUN cd /home/steam/ProjectZomboid/ && \
-    wget -N --quiet --no-check-certificate https://raw.githubusercontent.com/GameServerManagers/LinuxGSM/master/linuxgsm.sh && \
-    chmod u+x /home/steam/ProjectZomboid/linuxgsm.sh && \
-    bash linuxgsm.sh pzserver && \
-    chmod u+x /home/steam/ProjectZomboid/pzserver && \
-    /home/steam/ProjectZomboid/pzserver auto-install
+# Install PZ server
+WORKDIR /home/linuxgsm
+RUN ./linuxgsm.sh pzserver
 
 # Make server port available to host : (10 slots)
 EXPOSE ${STEAM_PORT_1}/udp ${STEAM_PORT_2}/udp ${SERVER_PORT}/udp ${PLAYER_PORTS} ${RCON_PORT}
@@ -104,4 +60,4 @@ EXPOSE ${STEAM_PORT_1}/udp ${STEAM_PORT_2}/udp ${SERVER_PORT}/udp ${PLAYER_PORTS
 # Persistant folder with server data : /server-data
 VOLUME ["/server-data", "/server-files"]
 
-ENTRYPOINT ["/home/steam/start-server.sh"]
+entrypoint ["./start-server.sh"]
