@@ -1,10 +1,30 @@
 #!/bin/bash
 
-ORIGINAL_SERVER_NAME="pzserver"
-ORIGINAL_SERVER_SCRIPT="/home/linuxgsm/${ORIGINAL_SERVER_NAME}"
-ORIGINAL_SERVER_CFG="/home/linuxgsm/lgsm/config-lgsm/pzserver/${ORIGINAL_SERVER_NAME}.cfg"
-ORIGINAL_SERVER_INI="/home/linuxgsm/lgsm/config-default/config-game/server.ini"
+sanitize_string() {
+    local sanitized="$1"
 
+    # First, replace spaces with dashes
+    sanitized=${sanitized// /-/}
+    # Now, replace anything that's not alphanumeric, an underscore or a dash
+    sanitized=${sanitized//[^a-zA-Z0-9_-]/-/}
+    # Finally, lowercase with TR
+    sanitized=`echo -n $sanitized | tr A-Z a-z`
+
+    return sanitized
+}
+
+configure_variable () {
+    if [ -z "$(grep "$1" "${SERVER_CFG}")" ]
+    then
+        echo "$1=\"$2\"" >> "${SERVER_CFG}"
+    else
+        sed -ri "s/^$1=\"(.*)\"$/$1=\"$2\"/" "${SERVER_CFG}"
+    fi
+}
+
+ORIGINAL_SERVER_SCRIPT="/home/linuxgsm/pzserver"
+
+SERVER_NAME=`sanitize_string ${SERVER_NAME}`
 SERVER_SCRIPT="/home/linuxgsm/${SERVER_NAME}"
 SERVER_CFG="/home/linuxgsm/lgsm/config-lgsm/pzserver/${SERVER_NAME}.cfg"
 SERVER_INI="/server-data/Server/${SERVER_NAME}.ini"
@@ -22,51 +42,28 @@ then
 	exit 1
 fi
 
-# Install the server
-if [ ! -f /home/linuxgsm/.server-installed ]
-then
-    echo "Install the server..."
-    $ORIGINAL_SERVER_SCRIPT auto-install
-    touch /home/linuxgsm/.server-installed
-fi
-
-# Update the server with the last version
-echo "Update the server to the last version after each start/restart..."
-if [ "${UPDATE_LGSM_AT_RESTART}" == "true" ]
-then
-    $ORIGINAL_SERVER_SCRIPT update-lgsm
-fi
-$ORIGINAL_SERVER_SCRIPT update
-
-# Copy original config files
-if [ "${ORIGINAL_SERVER_SCRIPT}" != "${SERVER_SCRIPT}" ]
+if [ "${ORIGINAL_SERVER_SCRIPT}" != "${SERVER_SCRIPT}" ] && [ ! -f ${SERVER_SCRIPT} ]
 then 
     cp "${ORIGINAL_SERVER_SCRIPT}" "${SERVER_SCRIPT}"
-
-    if [ ! -f $SERVER_CFG ]
-    then
-        cp -f "${ORIGINAL_SERVER_CFG}" "${SERVER_CFG}"
-    fi
 fi
 
-# Set admin password
+# Install the server
+if [ ! -f /home/linuxgsm/.${SERVER_NAME}-installed ]
+then
+    echo "Install the server..."
+    $SERVER_SCRIPT auto-install
+    touch /home/linuxgsm/.${SERVER_NAME}-installed
+fi
+
+# Change LGSM configuration
 if [ -f $SERVER_CFG ]
 then
-    if [ -z "$(grep "adminpassword" "${SERVER_CFG}")" ]
-    then
-        echo "" >> "${SERVER_CFG}"
-        echo "adminpassword=\"${ADMIN_PASSWORD}\"" >> "${SERVER_CFG}"
-    else
-        sed -ri "s/^adminpassword=\"(.*)\"$/adminpassword=\"${ADMIN_PASSWORD}\"/" "${SERVER_CFG}"
-    fi
+    configure_variable "adminpassword" $ADMIN_PASSWORD
+    configure_variable "branch" $SERVER_BRANCH
+    configure_variable "betapassword" $SERVER_BETA_PASSWORD
 fi
 
-# Customize current server
-if [ ! -f $SERVER_INI ]
-then
-    cp -f ${ORIGINAL_SERVER_INI} ${SERVER_INI}
-fi
-
+# Change server configuration
 if [ -f $SERVER_INI ]
 then
     sed -ri "s/^Password=(.*)$/Password=${SERVER_PASSWORD}/" "${SERVER_INI}"
@@ -80,8 +77,16 @@ then
     sed -ri "s/^RCONPassword=(.*)$/RCONPassword=${RCON_PASSWORD}/" "${SERVER_INI}"
 fi
 
+# Update the server with the latest version
+echo "Update the server to the lastest version after each start/restart..."
+if [ "${LGSM_UPDATE}" == "true" ]
+then
+    $SERVER_SCRIPT update-lgsm
+fi
+$SERVER_SCRIPT update
+
 # Start the server with a specific name and admin password
-echo "Start the project-zomboid server named ${SERVER_NAME}"
+echo "Start the project-zomboid server named ${SERVER_NAME}..."
 $SERVER_SCRIPT start
 
 # Wait for file creation

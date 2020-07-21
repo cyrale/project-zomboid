@@ -1,7 +1,7 @@
 FROM cyrale/linuxgsm
 
 ## Environment variables
-ENV UPDATE_LGSM_AT_RESTART "true"
+ENV LGSM_UPDATE "true"
 # Steam ports
 ENV STEAM_PORT_1 8766
 ENV STEAM_PORT_2 8767
@@ -9,12 +9,14 @@ ENV STEAM_PORT_2 8767
 ENV RCON_PORT 27015
 ENV RCON_PASSWORD "rcon-password"
 # Server informations
-ENV SERVER_NAME "pz-server"
+ENV SERVER_NAME "pzserver"
 ENV SERVER_PASSWORD ""
 ENV SERVER_PUBLIC_NAME "Project Zomboid Server"
 ENV SERVER_PUBLIC_DESC ""
+ENV SERVER_BRANCH ""
+ENV SERVER_BETA_PASSWORD ""
 # Admin DB Password (required for the first launch)
-ENV ADMIN_PASSWORD "pz-server-password"
+ENV ADMIN_PASSWORD "pzserver-password"
 # Server port
 ENV SERVER_PORT 16261
 # Game UDP port to allow player to contact the server (by default : 10 players)
