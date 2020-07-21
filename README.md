@@ -10,14 +10,15 @@ Create two directories where you want to run your server :
 
 - `server-data`: mandatory if you want to keep configuration between each restart
 - `server-files`: optional, only necessary if you want to install mods
-  Adjust the permissions of this two directories. It could be done with this commands:
+
+Adjust the permissions of this two directories. It could be done with this commands:
 
 ```bash
 chown 1000:1000 server-data
 chown 1000:1000 server-files
 ```
 
-`1000:1000` represent the user and the group of the steam user that run server in the image.
+`1000:1000` represent the user and the group of the LinuxGSM\_ user that run server in the image.
 
 ### Docker command
 
