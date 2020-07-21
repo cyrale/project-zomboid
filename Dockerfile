@@ -1,4 +1,4 @@
-FROM cyrale/linuxgsm
+FROM cyrale/linuxgsm:0.1
 
 ## Environment variables
 ENV LGSM_UPDATE "true"
