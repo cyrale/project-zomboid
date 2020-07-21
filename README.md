@@ -7,9 +7,10 @@ Docker version of the Project Zomboid steam server.
 ### Before starting
 
 Create two directories where you want to run your server :
+
 - `server-data`: mandatory if you want to keep configuration between each restart
 - `server-files`: optional, only necessary if you want to install mods
-Adjust the permissions of this two directories. It could be done with this commands:
+  Adjust the permissions of this two directories. It could be done with this commands:
 
 ```bash
 chown 1000:1000 server-data
@@ -21,8 +22,8 @@ chown 1000:1000 server-files
 ### Docker command
 
 ```bash
-docker run -d -e SERVER_NAME="pz-server" \
-              -e ADMIN_PASSWORD="pz-server-password" \
+docker run -d -e SERVER_NAME="pzserver" \
+              -e ADMIN_PASSWORD="pzserver-password" \
               -v $(pwd)/server-data:/server-data \
               -p 8766:8766/udp \
               -p 8767:8767/udp \
@@ -45,8 +46,8 @@ services:
     image: cyrale/project-zomboid
     restart: unless-stopped
     environment:
-      SERVER_NAME: "pz-server"
-      ADMIN_PASSWORD: "pz-server-password"
+      SERVER_NAME: "pzserver"
+      ADMIN_PASSWORD: "pzserver-password"
     ports:
       - "8766:8766/udp"
       - "8767:8767/udp"
@@ -67,29 +68,32 @@ Some of options are not used in these two examples. Look below if you want to ad
 
 ## Variables
 
-- __STEAM_PORT_1__ Steam port 1 (default: 8766)
-- __STEAM_PORT_2__ Steam port 2 (default: 8767)
-- __RCON_PORT__ RCON port (default: 27015)
-- __RCON_PASSWORD__ RCON password
-- __SERVER_NAME__ Name of your server (for db & ini file). __Warning:__ don't use special characters or spaces.
-- __SERVER_PASSWORD__ Password of your server used to connect to it
-- __SERVER_PUBLIC_NAME__ Public name of your server
-- __SERVER_PUBLIC_DESC__ Public description of your server
-- __ADMIN_PASSWORD__ Admin password on your server
-- __SERVER_PORT__ Game server port
-- __PLAYER_PORTS__ Game ports to allow player to contact the server (by default : 10 players)
+- **LGSM_UPDATE** Enable automatic update of LinuxGSM\_ at restart (default: true)
+- **STEAM_PORT_1** Steam port 1 (default: 8766)
+- **STEAM_PORT_2** Steam port 2 (default: 8767)
+- **RCON_PORT** RCON port (default: 27015)
+- **RCON_PASSWORD** RCON password
+- **SERVER_NAME** Name of your server (for db & ini file). **Warning:** don't use special characters or spaces.
+- **SERVER_PASSWORD** Password of your server used to connect to it
+- **SERVER_PUBLIC_NAME** Public name of your server
+- **SERVER_PUBLIC_DESC** Public description of your server
+- **SERVER_BRANCH** Name of the beta branch
+- **SERVER_BETA_PASSWORD** Password for the beta branch
+- **ADMIN_PASSWORD** Admin password on your server
+- **SERVER_PORT** Game server port
+- **PLAYER_PORTS** Game ports to allow player to contact the server (by default : 10 players)
 
 ## Volumes
 
-- __/server-data__ Data directory of the server. Contains db, config files...
-- __/server-files__ Application dir of the server. Contains the mods directory.
+- **/server-data** Data directory of the server. Contains db, config files...
+- **/server-files** Application dir of the server. Contains the mods directory.
 
 ## Expose
 
-- __8766__ Steam port 1 (udp)
-- __8767__ Steam port 2 (udp)
-- __27015__ RCON
-- __16261__ Game server (udp)
-- __16262-16XXX__ Clients slots
+- **8766** Steam port 1 (udp)
+- **8767** Steam port 2 (udp)
+- **27015** RCON
+- **16261** Game server (udp)
+- **16262-16XXX** Clients slots
 
 You need to bind X ports for client connection. (Example : If you have 10 slots, you need to put `-p 16262-16272:16262-16272`, if you have 100 slots, you need to put `-p 16262-16362:16262-16362`).
