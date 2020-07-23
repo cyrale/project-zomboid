@@ -32,14 +32,14 @@ SERVER_INI="/server-data/Server/${SERVER_NAME}.ini"
 # Check if both directory are writable
 if [ ! -w /server-data ]
 then
-	echo "[Error] Can't access your data directory. Check permissions on your mapped directory with /server-data."
-	exit 1
+    echo "[Error] Can't access your data directory. Check permissions on your mapped directory with /server-data."
+    exit 1
 fi
 
 if [ ! -w /server-files ]
 then
-	echo "[Error] Can't access your server files directory. Check permissions on your mapped directory with /server-files."
-	exit 1
+    echo "[Error] Can't access your server files directory. Check permissions on your mapped directory with /server-files."
+    exit 1
 fi
 
 if [ "${ORIGINAL_SERVER_SCRIPT}" != "${SERVER_SCRIPT}" ] && [ ! -f ${SERVER_SCRIPT} ]
