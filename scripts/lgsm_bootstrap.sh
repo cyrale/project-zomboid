@@ -4,14 +4,14 @@ source /lgsm_functions.sh
 
 fn_check_user
 
-export LGSM_GAMESERVER_RENAME="$(fn_sanitize_string "${SERVER_NAME}")"
-export LGSM_GAMESERVER_START="${SERVER_START:-true}"
+export LGSM_GAMESERVER="pzserver"
 
-ls -alh /home/linuxgsm
-[ ! -L /server-data ] && echo "true" || echo "false"
-echo $(readlink -fn /server-data)
-[ ! -w $(readlink -fn /server-data) ] && echo "true" || echo "false"
-[ ! -w /home/linuxgsm/Zomboid ] && echo "true" || echo "false"
+if [ "${SERVER_NAME}" != "${LGSM_GAMESERVER}" ]
+then
+    export LGSM_GAMESERVER_RENAME="$(fn_sanitize_string "${SERVER_NAME}")"
+fi
+
+export LGSM_GAMESERVER_START="${SERVER_START:-true}"
 
 # Check if both directory are writable
 if [ ! -L /server-data ] || [ ! -w $(readlink -fn /server-data) ]

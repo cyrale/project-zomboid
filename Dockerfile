@@ -33,18 +33,13 @@ RUN apt-get update && \
     rm -rf /tmp/* && \
     rm -rf /var/tmp/*
 
-# Copy entrypoint
-# COPY start-server.sh /home/linuxgsm/start-server.sh
-# RUN chown linuxgsm:linuxgsm /home/linuxgsm/start-server.sh && \
-#     chmod +x /home/linuxgsm/start-server.sh   
-
 # Create server directories and link to access them
 RUN [ -d /home/linuxgsm/Zomboid ] || mkdir -p /home/linuxgsm/Zomboid && \
     chown linuxgsm:linuxgsm /home/linuxgsm/Zomboid && \
     ln -s /home/linuxgsm/Zomboid /server-data && \
     [ -d /home/linuxgsm/serverfiles ] || mkdir -p /home/linuxgsm/serverfiles && \
     chown linuxgsm:linuxgsm /home/linuxgsm/serverfiles && \
-    ln -s /home/linuxgsm/serverfiles /server-files 
+    ln -s /home/linuxgsm/serverfiles /server-files
 
 # Copy scripts
 COPY ./scripts/*.sh /
@@ -58,5 +53,3 @@ EXPOSE ${STEAM_PORT_1}/udp ${STEAM_PORT_2}/udp ${SERVER_PORT}/udp ${PLAYER_PORTS
 
 # Persistant folder with server data : /server-data
 VOLUME ["/server-data", "/server-files"]
-
-ENTRYPOINT []
