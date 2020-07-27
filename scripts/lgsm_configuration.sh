@@ -3,12 +3,32 @@
 source /lgsm_functions.sh
 source /lgsm_variables.sh
 
-fn_configure_variable () {
-    if [ -z "$(grep "${1}" "${server_config_file}")" ]
+fn_configuration_already_set() {
+    local var_name="${1}="
+
+    if [[ ( ! -z "${LGSM_COMMON_CONFIG}" && ! -z "$(echo "${LGSM_COMMON_CONFIG}" | grep "${var_name}")" ) \
+        || (! -z "${LGSM_COMMON_CONFIG_FILE}" && ! -z "$(grep "${var_name}" "${LGSM_COMMON_CONFIG_FILE}")" ) \
+        || ( ! -z "${LGSM_SERVER_CONFIG}" && ! -z "$(echo "${LGSM_SERVER_CONFIG}" | grep "${var_name}")" ) \
+        || ( ! -z "${LGSM_SERVER_CONFIG_FILE}" && ! -z "$(grep "${var_name}" "${LGSM_SERVER_CONFIG_FILE}")" ) ]]
     then
-        echo "${1}=\"${2}\"" >> "${server_config_file}"
-    else
-        sed -ri "s/^${1}=\"(.*)\"$/${1}=\"${2}\"/" "${server_config_file}"
+        return 1
+    fi
+
+    return 0
+}
+
+fn_configure_variable () {
+    fn_configuration_already_set "${1}"
+    local already_set=$?
+
+    if [[ $already_set -eq 0 ]]
+    then
+        if [ -z "$(grep "${1}" "${server_config_file}")" ]
+        then
+            echo "${1}=\"${2}\"" >> "${server_config_file}"
+        else
+            sed -ri "s/^${1}=\"(.*)\"$/${1}=\"${2}\"/" "${server_config_file}"
+        fi
     fi
 }
 
