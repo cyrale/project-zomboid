@@ -83,7 +83,7 @@ Some variables are inherited from [cyrale/linuxgsm](https://github.com/cyrale/li
 -   **SERVER_BETA_PASSWORD** Password for the beta branch
 -   **ADMIN_PASSWORD** Admin password on your server
 -   **SERVER_PORT** Game server port
--   **PLAYER_PORTS** Game ports to allow player to contact the server (by default : 10 players)
+-   **PLAYER_PORTS** Game ports to allow player to contact the server (by default : 16262-16272 to allow 10 players)
 
 **STEAM_PORT_1**, **STEAM_PORT_2**, **RCON_PORT**, **RCON_PASSWORD**, **SERVER_PASSWORD**, **SERVER_PUBLIC_NAME**, **SERVER_PUBLIC_DESC** and **SERVER_PORT** are optional if you have access to the file `/server-data/Server/$SERVER_NAME.ini` where the values are.
 
