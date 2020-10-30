@@ -47,6 +47,9 @@ fi
 # Change LGSM configuration
 if [ -f $server_config_file ]
 then
+    ips=($(hostname -I))
+
+    fn_configure_variable "ip" "${ips[0]}"
     fn_configure_variable "adminpassword" $ADMIN_PASSWORD
     fn_configure_variable "branch" $SERVER_BRANCH
     fn_configure_variable "betapassword" $SERVER_BETA_PASSWORD
