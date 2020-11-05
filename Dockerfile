@@ -1,4 +1,4 @@
-FROM cyrale/linuxgsm:0.2
+FROM ghcr.io/cyrale/linuxgsm:0.2
 
 # Steam ports
 ENV STEAM_PORT_1=8766  \
