@@ -8,8 +8,8 @@ Docker version of the Project Zomboid steam server.
 
 Create two directories where you want to run your server :
 
--   `server-data`: mandatory if you want to keep configuration between each restart
--   `server-files`: optional, contains all the files of the application
+- `server-data`: mandatory if you want to keep configuration between each restart
+- `server-files`: optional, contains all the files of the application
 
 Adjust the permissions of this two directories. It could be done with this commands:
 
@@ -32,7 +32,7 @@ docker run -d -e SERVER_NAME="pzserver" \
               -p 16262-16272:16262-16272 \
               -p 27015:27015 \
               --name project-zomboid \
-              cyrale/project-zomboid
+              ghcr.io/cyrale/project-zomboid
 ```
 
 ### Docker Compose
@@ -43,20 +43,20 @@ Alternatively, you could use Docker Compose with this `docker-compose.yml` file:
 version: "3.0"
 
 services:
-    project-zomboid:
-        image: cyrale/project-zomboid
-        restart: unless-stopped
-        environment:
-            SERVER_NAME: "pzserver"
-            ADMIN_PASSWORD: "pzserver-password"
-        ports:
-            - "8766:8766/udp"
-            - "8767:8767/udp"
-            - "16261:16261/udp"
-            - "16262-16272:16262-16272"
-            - "27015:27015"
-        volumes:
-            - ./server-data:/server-data
+  project-zomboid:
+    image: ghcr.io/cyrale/project-zomboid
+    restart: unless-stopped
+    environment:
+      SERVER_NAME: "pzserver"
+      ADMIN_PASSWORD: "pzserver-password"
+    ports:
+      - "8766:8766/udp"
+      - "8767:8767/udp"
+      - "16261:16261/udp"
+      - "16262-16272:16262-16272"
+      - "27015:27015"
+    volumes:
+      - ./server-data:/server-data
 ```
 
 After creating this file, launch the server with `docker-compose up`.
@@ -71,19 +71,19 @@ Some of options are not used in these two examples. Look below if you want to ad
 
 Some variables are inherited from [cyrale/linuxgsm](https://github.com/cyrale/linuxgsm#variables).
 
--   **STEAM_PORT_1** Steam port 1 (default: 8766)
--   **STEAM_PORT_2** Steam port 2 (default: 8767)
--   **RCON_PORT** RCON port (default: 27015)
--   **RCON_PASSWORD** RCON password
--   **SERVER_NAME** Name of your server (for db & ini file). **Warning:** don't use special characters or spaces.
--   **SERVER_PASSWORD** Password of your server used to connect to it
--   **SERVER_PUBLIC_NAME** Public name of your server
--   **SERVER_PUBLIC_DESC** Public description of your server
--   **SERVER_BRANCH** Name of the beta branch
--   **SERVER_BETA_PASSWORD** Password for the beta branch
--   **ADMIN_PASSWORD** Admin password on your server
--   **SERVER_PORT** Game server port
--   **PLAYER_PORTS** Game ports to allow player to contact the server (by default : 16262-16272 to allow 10 players)
+- **STEAM_PORT_1** Steam port 1 (default: 8766)
+- **STEAM_PORT_2** Steam port 2 (default: 8767)
+- **RCON_PORT** RCON port (default: 27015)
+- **RCON_PASSWORD** RCON password
+- **SERVER_NAME** Name of your server (for db & ini file). **Warning:** don't use special characters or spaces.
+- **SERVER_PASSWORD** Password of your server used to connect to it
+- **SERVER_PUBLIC_NAME** Public name of your server
+- **SERVER_PUBLIC_DESC** Public description of your server
+- **SERVER_BRANCH** Name of the beta branch
+- **SERVER_BETA_PASSWORD** Password for the beta branch
+- **ADMIN_PASSWORD** Admin password on your server
+- **SERVER_PORT** Game server port
+- **PLAYER_PORTS** Game ports to allow player to contact the server (by default : 16262-16272 to allow 10 players)
 
 **STEAM_PORT_1**, **STEAM_PORT_2**, **RCON_PORT**, **RCON_PASSWORD**, **SERVER_PASSWORD**, **SERVER_PUBLIC_NAME**, **SERVER_PUBLIC_DESC** and **SERVER_PORT** are optional if you have access to the file `/server-data/Server/$SERVER_NAME.ini` where the values are.
 
@@ -91,15 +91,15 @@ Some variables are inherited from [cyrale/linuxgsm](https://github.com/cyrale/li
 
 ## Volumes
 
--   **/server-data** Data directory of the server. Contains db, config files...
--   **/server-files** Application dir of the server.
+- **/server-data** Data directory of the server. Contains db, config files...
+- **/server-files** Application dir of the server.
 
 ## Expose
 
--   **8766** Steam port 1 (udp)
--   **8767** Steam port 2 (udp)
--   **27015** RCON
--   **16261** Game server (udp)
--   **16262-16XXX** Clients slots
+- **8766** Steam port 1 (udp)
+- **8767** Steam port 2 (udp)
+- **27015** RCON
+- **16261** Game server (udp)
+- **16262-16XXX** Clients slots
 
 You need to bind X ports for client connection. (Example: If you have 10 slots, you need to put `-p 16262-16272:16262-16272`, if you have 100 slots, you need to put `-p 16262-16362:16262-16362`).
