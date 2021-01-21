@@ -20,10 +20,13 @@ chown 1000:1000 server-files
 
 `1000:1000` represent the user and the group of the LinuxGSM\_ user that run server in the image.
 
-### Docker command
+### Bridge networking
+
+#### Docker command
 
 ```bash
-docker run -d -e SERVER_NAME="pzserver" \
+docker run -d --name project-zomboid \
+              -e SERVER_NAME="pzserver" \
               -e ADMIN_PASSWORD="pzserver-password" \
               -v $(pwd)/server-data:/server-data \
               -p 8766:8766/udp \
@@ -31,16 +34,15 @@ docker run -d -e SERVER_NAME="pzserver" \
               -p 16261:16261/udp \
               -p 16262-16272:16262-16272 \
               -p 27015:27015 \
-              --name project-zomboid \
               ghcr.io/cyrale/project-zomboid
 ```
 
-### Docker Compose
+#### Docker Compose
 
 Alternatively, you could use Docker Compose with this `docker-compose.yml` file:
 
 ```yaml
-version: "3.0"
+version: "3.7"
 
 services:
   project-zomboid:
@@ -60,6 +62,53 @@ services:
 ```
 
 After creating this file, launch the server with `docker-compose up`.
+
+### Host networking
+
+#### Docker command
+
+```bash
+docker run -d --name project-zomboid \
+              --network=host \
+              -e SERVER_NAME="pzserver" \
+              -e ADMIN_PASSWORD="pzserver-password" \
+              -v $(pwd)/server-data:/server-data \
+              ghcr.io/cyrale/project-zomboid
+```
+
+#### Docker Compose
+
+Alternatively, you could use Docker Compose with this `docker-compose.yml` file:
+
+```yaml
+version: "3.7"
+
+services:
+  project-zomboid:
+    image: ghcr.io/cyrale/project-zomboid
+    restart: unless-stopped
+    environment:
+      SERVER_NAME: "pzserver"
+      ADMIN_PASSWORD: "pzserver-password"
+    network_mode: host
+    volumes:
+      - ./server-data:/server-data
+```
+
+After creating this file, launch the server with `docker-compose up`.
+
+#### Specifying IP address
+
+In this network mode, you could specify the IP address of the host instead of letting the program do it automatically.
+
+In the command line, add the parameter `-e LGSM_SERVER_CONFIG='ip="xx.xx.xx.xx"'`.
+
+In the docker compose file, add this environment variable:
+
+```yaml
+LGSM_SERVER_CONFIG: |
+  ip="xx.xx.xx.xx"
+```
 
 ### After starting
 
