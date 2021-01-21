@@ -11,7 +11,7 @@ Create two directories where you want to run your server :
 - `server-data`: mandatory if you want to keep configuration between each restart
 - `server-files`: optional, contains all the files of the application
 
-Adjust the permissions of this two directories. It could be done with this commands:
+If you have any errors with the permissions of these two directories, you can adjust it. It could be done with this commands:
 
 ```bash
 chown 1000:1000 server-data
